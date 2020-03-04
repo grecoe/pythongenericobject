@@ -65,3 +65,26 @@ print("\nEXAMPLE 3:")
 dummy_list = [1,2,3,4]
 dummy_generic = GenericObject(dummy_list)
 print(dummy_generic.list)
+
+
+'''
+    EXAMPLE 4: Using Azure CLI
+
+    NOTE: YOU MUST HAVE THE AZURE-CLI INSTALLED AND BE 
+          LOGGED INTO AN AZURE ACCOUNT.
+'''
+print("\nEXAMPLE 4 : REST CALL PARSING (AZURE)")
+
+stm = os.popen("az account list --all")
+content = "".join(stm.readlines())
+acct_list = json.loads(content)
+# Now we have the JSON as a dictionary/list
+acct_generic = GenericObject(acct_list)
+
+# Find all of the sub ID's, but since we know name is there where 
+# there is an id, lets print that too!
+obs = GenericObject.find_property(acct_generic, "id")
+print("Total Subscriptions : ", len(obs))
+for ob in obs:
+    print(ob.id,'=',ob.name)
+    break
