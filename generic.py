@@ -7,6 +7,14 @@ class GenericObject:
         dictionary indexing to get to what you are after.
     '''
     def __init__(self, properties : dict):
+        """
+            Constructor takes a dictionary OR a list and creates
+            a generic object out of it. 
+
+            In the case of a pure list, the property will be called 'list',
+            otherwise properties are named with the corresponding dictionary
+            key value. 
+        """
         
         if isinstance(properties, dict):
             parsed = GenericObject._expand_dict(properties)
@@ -21,6 +29,13 @@ class GenericObject:
 
     @staticmethod 
     def has_property(generic_object, prop_list):
+        """
+            Determine if there is a property on a given GenericObject
+
+            generic_object : Instance of GenericObject
+            prop_list : List of strings of properties. If there is more than one it will 
+                        march through the object assuming the sub property.
+        """
         prop_available = False
         if isinstance(generic_object, GenericObject):
             stepped_object = generic_object
@@ -33,6 +48,36 @@ class GenericObject:
                     break
 
         return prop_available
+
+    @staticmethod 
+    def find_property(generic_object, prop_name):
+        """
+            Return a list of Generic Objects that contain a given property name
+
+            generic_object : Instance of GenericObject
+            prop_name : Property name to find
+        """
+        return_generic_objects = []
+
+        if isinstance(generic_object, GenericObject):
+            gen_variables = vars(generic_object)
+            for variable in gen_variables.keys():
+                if variable == prop_name:
+                    # It has one...
+                    return_generic_objects.append(generic_object)
+
+                if isinstance(gen_variables[variable], GenericObject):
+                    # Property is a gen object
+                    sub_obs = GenericObject.find_property(gen_variables[variable], prop_name)
+                    return_generic_objects.extend(sub_obs)
+
+                if isinstance(gen_variables[variable], list):
+                    for sub_list_item in gen_variables[variable]:
+                        # Property is a gen object
+                        sub_obs = GenericObject.find_property(sub_list_item, prop_name)
+                        return_generic_objects.extend(sub_obs)
+
+        return return_generic_objects
 
     @staticmethod
     def dumpObject(generic_object, indent = 0, optional_end = ''):
@@ -93,7 +138,7 @@ class GenericObject:
             elif isinstance(props[key], list):
                 sub_list = []
                 for sub_item in props[key]:
-                    if isinstance(sub_item, dict) or isinstance(sub_item, dict):
+                    if isinstance(sub_item, dict):
                         sub_list.append(GenericObject(sub_item))
                     else:
                         sub_list.append(sub_item)

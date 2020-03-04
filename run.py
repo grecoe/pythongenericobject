@@ -21,9 +21,18 @@ if loaded_json:
     nic_data = GenericObject(loaded_json)
 
     '''
+        Test teh find_property by looking for the property whitelist. Given the JSON
+        file that is loaded, this SHOULD return 3 of them.
+    '''
+    print("FIND PROPERTY: whitelist")
+    white_lists = GenericObject.find_property(nic_data,"whitelist")
+    for lit in white_lists:
+        print(lit.whitelist)
+
+    '''
         Now just simply dump it to see what it looks like
     '''
-    print("DUMP OBJECT: NIC LIST")
+    print("\nDUMP OBJECT: NIC LIST")
     GenericObject.dumpObject(nic_data)
 
     '''
@@ -48,3 +57,11 @@ dumm_dict = {
 
 dummy_generic = GenericObject(dumm_dict)
 print(dummy_generic.name, dummy_generic.location)
+
+'''
+    EXAMPLE 3: Create a list
+'''
+print("\nEXAMPLE 3:")
+dummy_list = [1,2,3,4]
+dummy_generic = GenericObject(dummy_list)
+print(dummy_generic.list)
