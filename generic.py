@@ -112,10 +112,11 @@ class GenericObject:
                     
                     if any_generics:
                         print(indent_string, k, '= [')
+                        print(indent_string,'  -------')
                         for sub_item in v[k]:
                             GenericObject.dumpObject(sub_item, indent + 1, ',')
-                            print(indent_string,'-------')
-                        print(indent_string,']')
+                            print(indent_string,'  -------')
+                        print(indent_string,']') 
                     else:
                         print(indent_string, k,'=',v[k], optional_end)    
 
@@ -123,6 +124,7 @@ class GenericObject:
                     print(indent_string, k,'=',v[k], optional_end)    
         else:
             print(indent_string, generic_object, optional_end)
+
 
     @staticmethod
     def _expand_dict(props) -> dict:

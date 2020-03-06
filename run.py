@@ -52,11 +52,18 @@ if loaded_json:
 print("\nEXAMPLE 2:")
 dumm_dict = {
     "name" : "1289378F67A",
-    "location" : "eastus"
+    "location" : "eastus",
+    "skus" : {
+        "normal" : "abcdefc",
+        "advanced" : "123fsd"
+    }
 }
 
 dummy_generic = GenericObject(dumm_dict)
-print(dummy_generic.name, dummy_generic.location)
+
+print("name =", dummy_generic.name,"location =", dummy_generic.location)
+if GenericObject.has_property(dummy_generic, ["skus", "advanced"]):
+    print("skus.advanced =", dummy_generic.skus.advanced)
 
 '''
     EXAMPLE 3: Create a list
@@ -65,8 +72,6 @@ print("\nEXAMPLE 3:")
 dummy_list = [1,2,3,4]
 dummy_generic = GenericObject(dummy_list)
 print(dummy_generic.list)
-
-
 '''
     EXAMPLE 4: Using Azure CLI
 
