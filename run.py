@@ -33,7 +33,7 @@ if loaded_json:
         Now just simply dump it to see what it looks like
     '''
     print("\nDUMP OBJECT: NIC LIST")
-    GenericObject.dumpObject(nic_data)
+    GenericObject.describe(nic_data)
 
     '''
         Now we can iterate over it, assumit it has the information we expected
@@ -55,11 +55,17 @@ dumm_dict = {
     "location" : "eastus",
     "skus" : {
         "normal" : "abcdefc",
-        "advanced" : "123fsd"
+        "advanced" : "123fsd",
+        "inner" : {
+            "class" : "vm",
+            "count" : 4
+        }
     }
 }
 
 dummy_generic = GenericObject(dumm_dict)
+GenericObject.describe(dummy_generic)
+quit()
 
 print("name =", dummy_generic.name,"location =", dummy_generic.location)
 if GenericObject.has_property(dummy_generic, ["skus", "advanced"]):
@@ -72,6 +78,7 @@ print("\nEXAMPLE 3:")
 dummy_list = [1,2,3,4]
 dummy_generic = GenericObject(dummy_list)
 print(dummy_generic.list)
+
 '''
     EXAMPLE 4: Using Azure CLI
 
@@ -85,6 +92,7 @@ content = "".join(stm.readlines())
 acct_list = json.loads(content)
 # Now we have the JSON as a dictionary/list
 acct_generic = GenericObject(acct_list)
+
 
 # Find all of the sub ID's, but since we know name is there where 
 # there is an id, lets print that too!

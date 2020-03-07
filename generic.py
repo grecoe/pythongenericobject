@@ -80,17 +80,23 @@ class GenericObject:
         return return_generic_objects
 
     @staticmethod
-    def dumpObject(generic_object, indent = 0, optional_end = ''):
+    def describe(generic_object, indent = 0):
         """
-            dumpObject prints out the contents of a GenericObject instance
-            so that the user can see that it was built correctly. 
+            describe prints out the structure of a GenericObject instance
+            so that the user can see that either 
+                1. It was built correctly. 
+                2. What it's actually constructed of
 
             generic_object = A GenericObject instance
             indent = Number of spaces to indent printed lines
-            optional_end = Optional line ending
 
-            Both indent and optional_end are used internally, if you want to add one, 
+            Indent is used internally, if you want to add one, 
             go for it, but it's not required.
+
+            Types you can run into:
+                GenericObject (as all Dictionaries are replaced with this)
+                list
+                native types (int, str, tuple, float, or even an unknown class/function)
         """
 
         indent_string = "" 
@@ -100,31 +106,19 @@ class GenericObject:
         if isinstance(generic_object, GenericObject):
             v = vars(generic_object)
             for k in v.keys():
+                print(indent_string, k, ':' , type(v[k]))
                 if isinstance(v[k], GenericObject):
-                    print(indent_string, k, '=')
-                    GenericObject.dumpObject(v[k], indent + 2, optional_end)
+                    GenericObject.describe(v[k], indent + 2)
                 elif isinstance(v[k], list):
-                    any_generics = False
                     for sub_item in v[k]:
-                        if isinstance(sub_item, GenericObject):
-                            any_generics = True
-                            break
-                    
-                    if any_generics:
-                        print(indent_string, k, '= [')
-                        print(indent_string,'  -------')
-                        for sub_item in v[k]:
-                            GenericObject.dumpObject(sub_item, indent + 1, ',')
-                            print(indent_string,'  -------')
-                        print(indent_string,']') 
-                    else:
-                        print(indent_string, k,'=',v[k], optional_end)    
-
-                else:
-                    print(indent_string, k,'=',v[k], optional_end)    
+                        indent_modify = indent + 2
+                        if isinstance(sub_item, GenericObject) or isinstance(sub_item, list):
+                            new_indent = " " * indent_modify
+                            indent_modify += 2 
+                            print(new_indent, type(sub_item))            
+                        GenericObject.describe(sub_item, indent_modify)
         else:
-            print(indent_string, generic_object, optional_end)
-
+            print(indent_string, type(generic_object))
 
     @staticmethod
     def _expand_dict(props) -> dict:
