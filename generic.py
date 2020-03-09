@@ -128,9 +128,10 @@ class GenericObject:
         """
         return_dict = {}
         for key in props.keys():
+            key_value = key.replace(' ', '_')
             if isinstance(props[key], dict):
                 expanded = GenericObject(props[key])
-                return_dict[key] = expanded
+                return_dict[key_value] = expanded
             elif isinstance(props[key], list):
                 sub_list = []
                 for sub_item in props[key]:
@@ -138,9 +139,9 @@ class GenericObject:
                         sub_list.append(GenericObject(sub_item))
                     else:
                         sub_list.append(sub_item)
-                return_dict[key] = sub_list
+                return_dict[key_value] = sub_list
             else:
-                return_dict[key] = props[key]
+                return_dict[key_value] = props[key]
         return return_dict
 
     @staticmethod

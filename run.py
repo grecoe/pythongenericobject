@@ -56,8 +56,8 @@ dumm_dict = {
     "skus" : {
         "normal" : "abcdefc",
         "advanced" : "123fsd",
-        "inner" : {
-            "class" : "vm",
+        "inner value" : {
+            "cls" : "vm",
             "count" : 4
         }
     }
@@ -65,7 +65,6 @@ dumm_dict = {
 
 dummy_generic = GenericObject(dumm_dict)
 GenericObject.describe(dummy_generic)
-quit()
 
 print("name =", dummy_generic.name,"location =", dummy_generic.location)
 if GenericObject.has_property(dummy_generic, ["skus", "advanced"]):
@@ -90,9 +89,20 @@ print("\nEXAMPLE 4 : REST CALL PARSING (AZURE)")
 stm = os.popen("az account list --all")
 content = "".join(stm.readlines())
 acct_list = json.loads(content)
-# Now we have the JSON as a dictionary/list
+# Now we have the JSON as a dictionary/list so capture it.
 acct_generic = GenericObject(acct_list)
 
+# Does the call return a dictionary or a list, we can query
+# to determine by looking for 'list'
+accounts = []
+if GenericObject.has_property(acct_generic, ['list']):
+    print("Account Count:", len(acct_generic.list))
+    # We have a list, so iterate the objects
+    for acct in acct_generic.list:
+        try:
+            print("ACCT: ", acct.id)
+        except Exception as ex:
+            print("ACCT: Does not have an id")
 
 # Find all of the sub ID's, but since we know name is there where 
 # there is an id, lets print that too!
@@ -100,4 +110,3 @@ obs = GenericObject.find_property(acct_generic, "id")
 print("Total Subscriptions : ", len(obs))
 for ob in obs:
     print(ob.id,'=',ob.name)
-    break
